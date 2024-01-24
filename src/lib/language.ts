@@ -2,7 +2,7 @@ import {
   type LanguageSupport as LS,
   type StreamParser,
 } from "@codemirror/language"
-import { LanguageDefinition } from "../interfaces/language"
+import { LanguageDefinition } from "../interfaces/language-definition"
 
 const importLegacy = () =>
   import("@codemirror/language").then(({ LanguageSupport, StreamLanguage }) => {
