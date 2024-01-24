@@ -1,4 +1,5 @@
 import Pane from "../components/pane"
+import Settings from "../components/settings"
 import { Icons } from "../components/shared/icnos"
 
 export default function Home() {
@@ -6,9 +7,10 @@ export default function Home() {
     <>
       <div className="flex flex-col justify-center items-center h-screen gap-4">
         <Pane />
+        <Settings />
       </div>
       <div>
-        <div className="absolute bottom-0 inset-x-0 text-center py-5">
+        <div className="fixed bottom-0 inset-x-0 text-center py-5 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="flex justify-center items-center max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
             <p className="text-sm mr-2">
               <span className="bg-clip-text bg-gradient-to-tl text-xl font-bold from-violet-600 to-pink-600 text-transparent">

@@ -1,9 +1,9 @@
 import { Listbox, Transition } from "@headlessui/react"
 import { ChevronDownIcon } from "@radix-ui/react-icons"
-import type { LanguageName } from "@uiw/codemirror-extensions-langs"
 import clsx from "clsx"
 import { Fragment } from "react"
-import { GradientBackgroundDefinition } from "../interfaces/gradient-background"
+import { LanguageDefinition } from "../interfaces/language"
+import { ThemeDefinition } from "../interfaces/theme"
 
 interface SelectProps<T> {
   type: "language" | "theme"
@@ -20,9 +20,12 @@ function ThemeBubble({ color }: { color: string }) {
   )
 }
 
-export default function Select<
-  T extends GradientBackgroundDefinition | LanguageName,
->({ type, initialValue, setValue, options }: SelectProps<T>) {
+export default function Select<T extends ThemeDefinition | LanguageDefinition>({
+  type,
+  initialValue,
+  setValue,
+  options,
+}: SelectProps<T>) {
   return (
     <Listbox
       value={initialValue}
@@ -38,11 +41,9 @@ export default function Select<
           )}
         >
           {type === "language" ? (
-            <span>{initialValue as LanguageName}</span>
+            <span>{(initialValue as LanguageDefinition).label}</span>
           ) : (
-            <ThemeBubble
-              color={(initialValue as GradientBackgroundDefinition).value}
-            />
+            <ThemeBubble color={(initialValue as ThemeDefinition).class} />
           )}
           <span className="pointer-events-none">
             <ChevronDownIcon
@@ -78,15 +79,13 @@ export default function Select<
                 >
                   {type === "language" ? (
                     <span className="block truncate pr-9">
-                      {option as LanguageName}
+                      {(option as LanguageDefinition).label}
                     </span>
                   ) : (
                     <>
-                      <ThemeBubble
-                        color={(option as GradientBackgroundDefinition).value}
-                      />
+                      <ThemeBubble color={(option as ThemeDefinition).class} />
                       <span className="block truncate">
-                        {(option as GradientBackgroundDefinition).name}
+                        {(option as ThemeDefinition).label}
                       </span>
                     </>
                   )}

@@ -1,104 +1,224 @@
 "use client"
 
+import { EditorView } from "@codemirror/view"
+import { tags as t } from "@lezer/highlight"
+import createTheme from "@uiw/codemirror-themes"
+import ReactCodeMirror from "@uiw/react-codemirror"
 import clsx from "clsx"
-import { Highlight, themes } from "prism-react-renderer"
-import { ChangeEvent, useEffect, useRef, useState } from "react"
+import { motion } from "framer-motion"
+import { useCallback, useEffect, useState } from "react"
+import { useSettingsContext } from "../contexts/setting-context"
+import { hslToHsla as adjustLightness } from "../lib/colors"
 
 export default function Pane() {
-  const [value, setValue] = useState("")
-  const [isTextAreaFocused, setIsTextAreaFocused] = useState(true)
-
-  const preRef = useRef<HTMLPreElement>(null)
-  const textAreaRef = useRef<HTMLTextAreaElement>(null)
-  const divRef = useRef<HTMLDivElement>(null)
-
-  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value)
-  }
-
-  useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.focus
-    }
+  const [selectedLanguage, setSelectedLanguage] = useState<any>(null)
+  const [code, setCode] = useState(`// Let's write code here!\n`)
+  const { language, theme, lineNumbers, padding } = useSettingsContext()
+  const onChange = useCallback((value: string) => {
+    setCode(value)
   }, [])
 
   useEffect(() => {
-    if (preRef.current && textAreaRef.current && divRef.current) {
-      const preHeight = preRef.current.clientHeight
-      const divHeight = divRef.current.clientHeight
+    async function loadLanguage() {
+      const lang = await language.extension()
 
-      textAreaRef.current.style.height = `${Math.max(preHeight, divHeight)}px`
+      setSelectedLanguage(lang)
     }
-  }, [preRef.current?.clientHeight, divRef.current?.clientHeight])
+
+    loadLanguage()
+  }, [language])
+
+  const styleTheme = EditorView.baseTheme({
+    "&.cm-editor": {
+      fontSize: "0.9375rem",
+    },
+    "&.cm-editor.cm-focused": {
+      outline: "none",
+    },
+    ".cm-gutterElement": {
+      display: "flex",
+      justifyContent: "flex-end",
+      paddingRight: "1rem !important",
+      lineHeight: "1.5rem",
+      letterSpacing: ".1px",
+    },
+    ".cm-content": {
+      lineHeight: "1.5rem",
+    },
+  })
+
+  // const c = theme.baseColors
+  const c = theme.generatedColors
+
+  const myTheme = createTheme({
+    theme: "dark",
+    settings: {
+      background: "transparent",
+      foreground: "white",
+      caret: c.at(0),
+      selection: adjustLightness(c.at(0)!, 0.1),
+      selectionMatch: adjustLightness(c.at(1)!, 0.2),
+      lineHighlight: "transparent",
+      gutterBackground: "transparent",
+      gutterForeground: adjustLightness(c.at(0)!, 0.4),
+      gutterBorder: "transparent",
+    },
+    styles: [
+      {
+        tag: [t.emphasis],
+        fontStyle: "italic",
+      },
+      {
+        tag: [t.strong],
+        fontStyle: "bold",
+      },
+      {
+        tag: [t.link],
+        color: c.at(1),
+      },
+      {
+        tag: [t.comment, t.lineComment, t.blockComment, t.docComment],
+        fontStyle: "italic",
+        color: adjustLightness(c.at(0)!, 0.4),
+      },
+      {
+        tag: [
+          t.bracket,
+          t.squareBracket,
+          t.paren,
+          t.punctuation,
+          t.angleBracket,
+        ],
+        color: c.at(0),
+      },
+      {
+        tag: t.variableName,
+        color: c.at(5),
+        fontStyle: "italic",
+      },
+      { tag: t.propertyName, color: c.at(5), fontStyle: "italic" },
+      { tag: t.definition(t.variableName), color: c.at(10) },
+      { tag: t.definition(t.propertyName), color: c.at(8) },
+      {
+        tag: [
+          t.moduleKeyword,
+          t.keyword,
+          t.changed,
+          t.annotation,
+          t.modifier,
+          t.namespace,
+          t.self,
+          t.meta,
+        ],
+        color: c.at(1),
+      },
+      {
+        tag: [t.typeName, t.typeOperator],
+        color: c.at(13),
+      },
+      {
+        tag: [t.operator, t.special(t.string)],
+        color: c.at(6),
+      },
+      {
+        tag: [t.number, t.bool, t.string, t.processingInstruction, t.inserted],
+        color: c.at(2),
+      },
+      {
+        tag: [
+          t.color,
+          t.className,
+          t.constant(t.name),
+          t.standard(t.name),
+          t.function(t.variableName),
+          t.function(t.propertyName),
+        ],
+        color: c.at(8),
+      },
+      {
+        tag: [t.regexp],
+        color: c.at(12),
+      },
+      {
+        tag: [t.tagName],
+        color: c.at(11),
+      },
+      {
+        tag: [t.attributeValue],
+        color: c.at(2),
+      },
+      {
+        tag: [t.attributeName],
+        color: c.at(6),
+      },
+      {
+        tag: [t.heading],
+        color: c.at(1),
+        fontWeight: "bold",
+      },
+      {
+        tag: [t.quote],
+        color: c.at(6),
+      },
+    ],
+  })
 
   return (
-    <div
+    <motion.div
+      layout
       className={clsx(
-        isTextAreaFocused
-          ? "border-x-4 border-y-4 border-pink-400"
-          : "border-x-4 border-y-4 border-white/20",
-        "h-2/3 w-2/3 max-w-4xl rounded-xl border-[1px] py-4",
-        "transition-colors duration-300 ease-in-out",
+        "relative z-0 w-auto min-w-[512px] max-w-5xl",
+        padding.class,
+        "bg-gradient-to-br",
+        theme.class,
+        "rounded-xl transition-all duration-200 ease-in-out",
       )}
     >
-      <div
-        ref={divRef}
-        className="relative h-full w-full overflow-auto"
+      <motion.div
+        layout
+        className="relative z-[1] h-full w-full min-w-[480px] max-w-2xl rounded-xl"
       >
-        <Highlight
-          theme={themes.nightOwl}
-          code={value}
-          language="jsx"
-        >
-          {({ className, tokens, getLineProps, getTokenProps }) => (
-            <>
-              <textarea
-                ref={textAreaRef}
-                value={value}
-                placeholder="Write here!"
-                onChange={handleChange}
-                spellCheck={false}
-                onFocus={() => setIsTextAreaFocused(true)}
-                onBlur={() => setIsTextAreaFocused(false)}
-                className={clsx(
-                  className,
-                  "absolute w-full resize-none overflow-hidden whitespace-pre-wrap",
-                  "break-words break-keep bg-transparent pl-16 pr-3 font-mono",
-                  "text-transparent caret-pink-500 selection:bg-pink-500/30 placeholder:text-white/20 focus:outline-none",
-                )}
-              />
-              <pre
-                ref={preRef}
-                aria-hidden={true}
-                className={clsx(
-                  className,
-                  "pointer-events-none absolute w-full select-none pr-3",
-                )}
-              >
-                {tokens.map((line, i) => (
-                  <div
-                    key={i}
-                    {...getLineProps({ line, key: i })}
-                    className="table-row"
-                  >
-                    <span className="table-cell w-10 select-none text-right opacity-50">
-                      {i + 1}
-                    </span>
-                    <code className="table-cell whitespace-pre-wrap break-words break-keep pl-6">
-                      {line.map((token, key) => (
-                        <span
-                          key={key}
-                          {...getTokenProps({ token, key })}
-                        />
-                      ))}
-                    </code>
-                  </div>
-                ))}
-              </pre>
-            </>
+        <div
+          className={clsx(
+            "absolute inset-0 rounded-xl",
+            "after:absolute after:inset-0 after:z-[2] after:translate-y-6 after:rounded-xl after:bg-black/60 after:blur-xl",
           )}
-        </Highlight>
-      </div>
-    </div>
+        >
+          <div
+            className={clsx(
+              "absolute inset-0 z-[3] rounded-xl",
+              "bg-gradient-to-br",
+            )}
+          />
+        </div>
+        <div className="relative z-[4] rounded-xl bg-black/70 p-4">
+          {selectedLanguage && (
+            <ReactCodeMirror
+              value={code}
+              onChange={onChange}
+              extensions={[
+                selectedLanguage,
+                styleTheme,
+                EditorView.lineWrapping,
+              ]}
+              basicSetup={{
+                lineNumbers: lineNumbers,
+                foldGutter: false,
+                autocompletion: false,
+                indentOnInput: false,
+                highlightActiveLine: false,
+                highlightActiveLineGutter: false,
+                dropCursor: false,
+                searchKeymap: false,
+                lintKeymap: false,
+                completionKeymap: false,
+                foldKeymap: false,
+              }}
+              theme={myTheme}
+            />
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
   )
 }

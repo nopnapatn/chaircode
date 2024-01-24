@@ -16,7 +16,7 @@ export default function Toggle({ initialValue, setValue }: ToggleProps) {
           "flex h-5 w-9 cursor-pointer rounded-full p-1",
           "transition-colors duration-200 ease-in-out",
           "focus:outline-none",
-          "ui-checked:bg-blue-600 ui-not-checked:bg-gray-200",
+          "ui-checked:bg-fuchsia-600 ui-not-checked:bg-gray-200",
         )}
       >
         <span

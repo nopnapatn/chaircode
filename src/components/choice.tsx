@@ -23,7 +23,10 @@ export default function Choices({
           <RadioGroup.Option
             key={choice.label}
             value={choice}
-            className={clsx("cursor-pointer select-none rounded-md")}
+            className={clsx(
+              "cursor-pointer select-none rounded-md",
+              "border-[1px] border-white/20",
+            )}
           >
             <span
               className={clsx(
