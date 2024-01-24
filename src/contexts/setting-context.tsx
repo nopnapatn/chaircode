@@ -1,9 +1,9 @@
 "use client"
 
 import { FC, ReactNode, createContext, useContext, useState } from "react"
-import { ChoiceDefinition } from "../interfaces/choice"
-import { LanguageDefinition } from "../interfaces/language"
-import { ThemeDefinition } from "../interfaces/theme"
+import { ChoiceDefinition } from "../interfaces/choice-definition"
+import { LanguageDefinition } from "../interfaces/language-definition"
+import { ThemeDefinition } from "../interfaces/theme-definition"
 import { SUPPORTED_LANGUAGES } from "../lib/language"
 import { SUPPORTED_PADDING_CHOICES, SUPPORTED_THEMES } from "../lib/theme"
 

@@ -2,8 +2,8 @@ import { Listbox, Transition } from "@headlessui/react"
 import { ChevronDownIcon } from "@radix-ui/react-icons"
 import clsx from "clsx"
 import { Fragment } from "react"
-import { LanguageDefinition } from "../interfaces/language"
-import { ThemeDefinition } from "../interfaces/theme"
+import { LanguageDefinition } from "../interfaces/language-definition"
+import { ThemeDefinition } from "../interfaces/theme-definition"
 
 interface SelectProps<T> {
   type: "language" | "theme"
