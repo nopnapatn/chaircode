@@ -1,6 +1,6 @@
 import chroma from "chroma-js"
-import { ChoiceDefinition } from "../interfaces/choice"
-import { ThemeDefinition } from "../interfaces/theme"
+import { ChoiceDefinition } from "../interfaces/choice-definition"
+import { ThemeDefinition } from "../interfaces/theme-definition"
 import { generateColors } from "./colors"
 
 export const SUPPORTED_THEMES: ThemeDefinition[] = [
