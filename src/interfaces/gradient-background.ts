@@ -1,4 +1,4 @@
-export interface GradientBackground {
+export interface GradientBackgroundDefinition {
   name: string
   value: string
 }

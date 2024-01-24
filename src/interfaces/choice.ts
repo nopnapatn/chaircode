@@ -1,4 +1,4 @@
-export interface Choice {
+export interface ChoiceDefinition {
   label: string
   class: string
 }

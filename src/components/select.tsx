@@ -3,7 +3,7 @@ import { ChevronDownIcon } from "@radix-ui/react-icons"
 import type { LanguageName } from "@uiw/codemirror-extensions-langs"
 import clsx from "clsx"
 import { Fragment } from "react"
-import { GradientBackground } from "../interfaces/gradient-background"
+import { GradientBackgroundDefinition } from "../interfaces/gradient-background"
 
 interface SelectProps<T> {
   type: "language" | "theme"
@@ -20,12 +20,9 @@ function ThemeBubble({ color }: { color: string }) {
   )
 }
 
-export default function Select<T extends GradientBackground | LanguageName>({
-  type,
-  initialValue,
-  setValue,
-  options,
-}: SelectProps<T>) {
+export default function Select<
+  T extends GradientBackgroundDefinition | LanguageName,
+>({ type, initialValue, setValue, options }: SelectProps<T>) {
   return (
     <Listbox
       value={initialValue}
@@ -43,7 +40,9 @@ export default function Select<T extends GradientBackground | LanguageName>({
           {type === "language" ? (
             <span>{initialValue as LanguageName}</span>
           ) : (
-            <ThemeBubble color={(initialValue as GradientBackground).value} />
+            <ThemeBubble
+              color={(initialValue as GradientBackgroundDefinition).value}
+            />
           )}
           <span className="pointer-events-none">
             <ChevronDownIcon
@@ -84,10 +83,10 @@ export default function Select<T extends GradientBackground | LanguageName>({
                   ) : (
                     <>
                       <ThemeBubble
-                        color={(option as GradientBackground).value}
+                        color={(option as GradientBackgroundDefinition).value}
                       />
                       <span className="block truncate">
-                        {(option as GradientBackground).name}
+                        {(option as GradientBackgroundDefinition).name}
                       </span>
                     </>
                   )}

@@ -1,11 +1,11 @@
 import { RadioGroup } from "@headlessui/react"
 import clsx from "clsx"
-import { Choice } from "../interfaces/choice"
+import { ChoiceDefinition } from "../interfaces/choice"
 
 interface ChoicesProps {
-  choices: Choice[]
-  initialValue: Choice
-  setValue: (_: Choice) => void
+  choices: ChoiceDefinition[]
+  initialValue: ChoiceDefinition
+  setValue: (_: ChoiceDefinition) => void
 }
 
 export default function Choices({
